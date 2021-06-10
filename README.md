@@ -5,6 +5,10 @@ UDP/5353 서비스인 mDNS(Multicast DNS)는 DNS에 기반하여 유사하게 �
 
 http://dns-sd.org/ServiceTypes.html 에서 요청할 수 있는 서비스 목록을 볼 수 있다.
 
+Python 코드에서 사용되는 모듈은 아래와 같다.
+1. socket -> 소켓 통신
+2. sys -> IP 인자
+3. binascii -> IP 거꾸로
 
 첨부된 Python 코드의 전체 요청 순서는 아래와 같다.
 1. UDP/5353 서비스가 활성화된 기기를 대상으로 IP 기반 Host Name을 요청한다
