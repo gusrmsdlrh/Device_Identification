@@ -9,11 +9,11 @@ UDP/5353 서비스인 mDNS(Multicast DNS)는 zeroconf 기술로 DHCP 환경이 �
 
 * TXT : 서비스에 대한 추가적인 정보
 
-* SRV : PTR에서 우선순위, 가중치, 포트를 추가적으로 제공 (우선순위, 가중치 사용x)
+* SRV : PTR에서 Priority, Weight, Port를 추가적으로 제공 ( Priority, Weight disable)
 
-* AAAA : IPv6 (사용x)
+* AAAA : IPv6 (disable)
 
-* A : IPv4 (사용x)
+* A : IPv4 (disable)
 
 
 http://dns-sd.org/ServiceTypes.html 에서 요청할 수 있는 서비스 목록을 볼 수 있지만 무수한 종류를 쿼리하기엔 리소스 제한이 존재하여 Service.dns-sd.local 쿼리를 이용한다.
@@ -66,6 +66,6 @@ Python 코드에서 사용되는 모듈은 아래와 같다.
 ![image](https://user-images.githubusercontent.com/40857478/121497348-4fb0a500-ca16-11eb-8738-e21ac36f5f0e.png)
 
 # 4. Reference
-[RFC 6763](https://datatracker.ietf.org/doc/html/rfc6763)
+[mDNS RFC 6763](https://datatracker.ietf.org/doc/html/rfc6763)
 
-[RFC 6762](https://datatracker.ietf.org/doc/html/rfc6762)
+[DNS-SD RFC 6762](https://datatracker.ietf.org/doc/html/rfc6762)
