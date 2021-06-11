@@ -30,20 +30,43 @@ def host_query_pkt():
         for i, k in zip(reverse, range(4)):
                 ip_byte.append(binascii.unhexlify('0' + str(len(i))))
                 globals()['var_{}'.format(k)] = ip_byte[k]+reverse[k].encode()
-        
+        # ex) '\x02 45 \x00 0 \x03 168 \x03 192'
         addr_arpa = var_3 + var_2 + var_1+ var_0 + b'\x07\x69\x6e\x2d\x61\x64\x64\x72\x04\x61\x72\x70\x61\x00\x00\x0c\x00\x01'
         host_pkt = b'\x00\x00\x01\x00\x00\x01\x00\x00\x00\x00\x00\x00' + addr_arpa
         return host_pkt, addr_arpa
 ```
 ![image](https://user-images.githubusercontent.com/40857478/121621321-eaf15b00-caa6-11eb-8807-758686f09de8.png)
 
-*  Standard Query로 요청하여 응답된 패킷의 Answers 필드의 Data length 필드의 값을 가져와 다음 byte 값부터 Data length 값의 길이 만큼 데이터를 가져온다.
-
+*  Standard Query로 요청하여 응답된 패킷의 Answers 필드의 Data length 필드의 값을 가져와 다음 byte 값부터 Data length 값의 길이 만큼 데이터를 가져온다. 이때 HostName '.local' 접미사는 mDNS를 사용하는 Bonjour에서 기기를 식별하기 위해 확인하는 용도로 사용되어 데이터를 가져올 때 접미사를 제거하여 출력한다.
+```
+def host_query():
+        sock = sock_create()
+        sock.send(host_pkt)
+        try:
+                print("[+] mDNS HostName Query")
+                host_data=sock.recv(1024).split(b'\x00\x01\x00\x00\x00\x0a')[1]
+                data_len=int(binascii.hexlify(host_data[0:2]),16)
+                print("\"HostName\" : " + host_data[3:data_len+1].decode())
+                service_query()
+        except socket.timeout as timeerror:
+                print("HostName Query : "+ str(timeerror))
+                service_query()
+```
 
 ![image](https://user-images.githubusercontent.com/40857478/121622112-5c7dd900-caa8-11eb-990f-670ffcb14352.png)
 
-3. 서비스 목록을 얻기 위해 services.dns-sd.udp.local Query 패킷을 작성하여 Request 한다
+* 서비스 목록을 얻기 위해 services.dns-sd.udp.local의 Standard Query 패킷을 작성하여 Request 한다
+```
+def service_query():
+        base = b'\x00\x00\x01\x00\x00\x01\x00\x00\x00\x00\x00\x00'
 
+	# _services._dns-sd._udp.local query
+        service_list_req = b'\x09\x5f\x73\x65\x72\x76\x69\x63\x65\x73\x07\x5f\x64\x6e\x73\x2d\x73\x64\x04\x5f\x75\x64\x70\x05\x6c\x6f\x63\x61\x6c\x00\x00\x0c\x00\x01'
+
+        sock = sock_create()
+        print("\r\n[+] mDNS Service Query")
+        sock.send(base + service_list_req )
+```
 
 
 4. Response 패킷의 Answers 필드에서 Service Name 데이터만 파싱한다
