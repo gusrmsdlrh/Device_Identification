@@ -161,7 +161,7 @@ elif srv_ and b"\x00\x21\x00\x01\x00\x00\x00\x0a" in recv_data: # SRV (Server Se
 ![image](https://user-images.githubusercontent.com/40857478/121630911-06fdf800-cab9-11eb-8be8-e507d5449aa3.png)
 
 # 4. 결과
-```python3 mdns_scan.py 192.168.0.45```
+**python3 mdns_scan.py 192.168.0.45**
 <br>
 ![image](https://user-images.githubusercontent.com/40857478/121629192-9f927900-cab5-11eb-9bc3-81b82f5441d9.png)
 <br><br>
