@@ -41,7 +41,7 @@ def host_query_pkt():
 ![image](https://user-images.githubusercontent.com/40857478/121621321-eaf15b00-caa6-11eb-8807-758686f09de8.png)
 
 <br><br>
-*  HostName을 요청하여 응답 패킷이 온다면 Answers 필드의 고정된 데이터를 기준으로 나누고 Data length의 값만큼 데이터를 읽어온다면 HostName을 얻을 수 있다. 이때 접미사 '.local'을 제거하여 가져온다.
+*  HostName을 요청하여 응답 패킷이 온다면 Answers 필드의 고정된 데이터를 기준으로 나누고 Data length의 값만큼 데이터를 읽어온다면 HostName을 얻을 수 있다. 이때 접미사 .local은 제거하고 출력한다.
 ```
 def host_query():
         sock = sock_create()
