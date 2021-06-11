@@ -8,17 +8,14 @@ UDP/5353 서비스인 mDNS(Multicast DNS)는 zeroconf 기술로 DHCP 환경이 �
 서비스 목록을 요청할 때는 service.dns-sd.udp.local 을 사용한다.
 
 * PTR : 서비스 도메인 이름
-
 * TXT : 서비스에 대한 추가적인 정보
-
 * SRV : PTR에서 ~~Priority, Weight,~~ Port를 추가적으로 제공
-
 * ~~AAAA : IPv6~~
-
 * ~~A : IPv4~~
 
 # 2. Python
-코드에서 사용되는 모듈은 아래와 같다.
+코드에서 사용되는 모듈은 아래와 같으며 최대한 내장 모듈을 이용하여 작성하였다.
+
 * import socket
 * import sys
 * import binascii
