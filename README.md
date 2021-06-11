@@ -39,10 +39,9 @@ def host_query_pkt():
         return host_pkt, addr_arpa
 ```
 ![image](https://user-images.githubusercontent.com/40857478/121621321-eaf15b00-caa6-11eb-8807-758686f09de8.png)
-![image](https://user-images.githubusercontent.com/40857478/121635534-606a2500-cac1-11eb-8921-7199b53cf96b.png)
 
 	
-*  HostName을 요청하여 응답 패킷이 온다면 Answers 필드에서 'Data length'의 값을 구한 길이만큼 데이터를 가져와 출력한다.
+*  HostName을 요청하여 응답 패킷이 온다면 Answers 필드에서 'Data length'의 값 길이만큼 데이터를 출력하면 HostName을 얻을 수 있다.
 ```
 def host_query():
         sock = sock_create()
@@ -60,7 +59,7 @@ def host_query():
 
 ![image](https://user-images.githubusercontent.com/40857478/121622112-5c7dd900-caa8-11eb-990f-670ffcb14352.png)
 
-* HostName Query가 끝나고 서비스 목록 Query를 수행하는데 요청하기 위해선 services.dns-sd.udp.local 유형으로 Standard Query 패킷을 요청한다 (Reference의 dns-sd list 참조)
+* HostName Query가 끝나고 Service List Query를 수행하는데 요청하기 위해선 [DNS-SD Service Type List](http://dns-sd.org/ServiceTypes.html)에서 확인할 수 있는 services.dns-sd.udp.local 유형으로 Standard Query를 요청한다.
 ```
 def service_query():
         base = b'\x00\x00\x01\x00\x00\x01\x00\x00\x00\x00\x00\x00'
@@ -73,8 +72,8 @@ def service_query():
 ```
 ![image](https://user-images.githubusercontent.com/40857478/121628791-e895fd80-cab4-11eb-9a53-b4a5d3c3e232.png)
 
-* 서비스 목록을 요청하여 응답 패킷이 존재한다면 Answers 필드에서 ServiceName 데이터들을 추출하기 위해 Queries 필드를 기준으로 나누어진 데이터에서 Answers 공통 Field로 한번 더 나누어 ServiceName을 얻어온다.<br>
-* 얻어온 ServiceName을 이후 재 요청하기 위해서 도메인 데이터를 추가한다
+* Service List을 요청하여 응답 패킷이 온다면 Answers 필드에서 ServiceName 데이터들을 추출하기 위해 1차적으로는 Queries 필드를 기준으로 나누고 2차적으로는 나누어진 2번째 리스트 데이터에서 Answers 공통 Field 데이터로 한번 더 나누면 일정한 offset에서 ServiceName을 얻어올 수 있다.<br>
+* 그리고 ServiceName을 재 요청하기 위해서는 도메인 데이터가 필요하기에 얻어온 Service Name에 도메인 데이터가 존재하지 않으면 추가하여 service_type() 함수로 전달한다.
 ```
 data=sock.recv(1024).split(service_list_req) # Queries Field Split
 
@@ -90,7 +89,7 @@ service_raw=data[1].split(b'\xc0\x0c\x00\x0c') # Answers Field service name Spli
 ![image](https://user-images.githubusercontent.com/40857478/121628836-fc416400-cab4-11eb-8b21-b92edf2fdad0.png)
 
 	
-* 받아온 Service Name 데이터를 기준으로 Query 패킷을 재 작성하여 요청한다
+* 전달받은 ServiceName으로 Query 패킷을 재 작성하여 요청한다.
 ```
 def service_type(base, service_req):
         print("\"" + service_req[1:-10].decode() + "\"")
@@ -104,10 +103,9 @@ def service_type(base, service_req):
 ![image](https://user-images.githubusercontent.com/40857478/121630771-beded580-cab8-11eb-8911-83fc2ba84785.png)
 
 	
-* 각 서비스별 요청의 응답 패킷이 존재한다면 Answers 필드에서 PTR/TXT/SRV Type 데이터에 맞게 분류하며 수행한다.
+* 각 ServiceName별로 응답 패킷이 존재한다면 Answers 필드에서 PTR/TXT/SRV Type 데이터에 맞게 분류하며 수행한다.
 ```
 recv_data=sock.recv(1024)
-
 for i in range(len(recv_data.split(b'\x00\x01\x00\x00\x00\x0a'))): # type
 	if ptr_ and b"\x00\x0c\x00\x01\x00\x00\x00\x0a" in recv_data: # PTR (domain name PoinTeR)
 		[...]
@@ -119,7 +117,7 @@ for i in range(len(recv_data.split(b'\x00\x01\x00\x00\x00\x0a'))): # type
 ![image](https://user-images.githubusercontent.com/40857478/121630816-d1590f00-cab8-11eb-9c06-d2f4e82c38c0.png)
 
 
-* PTR, SRV Type은 'Data length'의 값을 구한 길이만큼 데이터를 가져와 출력하는데 SRV Type의 Port 데이터는 따로 추출하여 출력한다.
+* PTR, SRV Type은 Data length의 값 길이만큼 데이터를 가져와 출력한다.
 ```
 if ptr_ and b"\x00\x0c\x00\x01\x00\x00\x00\x0a" in recv_data: # PTR (domain name PoinTeR)
 	ptr_data=recv_data.split(b'\x00\x0c\x00\x01\x00\x00\x00\x0a')[1]
@@ -135,8 +133,8 @@ elif srv_ and b"\x00\x21\x00\x01\x00\x00\x00\x0a" in recv_data: # SRV (Server Se
 ![image](https://user-images.githubusercontent.com/40857478/121630880-efbf0a80-cab8-11eb-9bf3-a49013c3d139.png)
 
 	
-* TXT Type은 Data length와 TXT Length가 존재하는데 Data length는 총 데이터 길이의 값이고 TXT Length는 해당 필드 데이터의 길이 값을 의미한다. <br>
-* 먼저 TXT Length 값만큼 데이터를 출력하는 반복문을 작성하는데 이때 TXT Length와 실제 데이터를 합한 것을 Data length와 비교하여 같을때까지 수행하게 된다.
+* TXT Type은 Data length와 TXT Length 두개가 존재하는데 Data length는 총 데이터의 길이 값이고 TXT Length는 해당 필드 데이터의 길이 값을 의미한다. <br>
+* 먼저 Data length 값을 저장한 후 TXT Length 값만큼 데이터를 출력하는 반복문을 수행하는데 이때 TXT Length 값에 +1 씩 더하여 축적된 값과 Data length 값을 비교하여 같을때까지 수행하면 모든 TXT 데이터를 얻어올 수 있게 된다.
 ```
  elif txt_ and b"\x00\x10\x00\x01\x00\x00\x00\x0a" in recv_data: # TXT (Text strings)
 	txt_data=recv_data.split(b'\x00\x10\x00\x01\x00\x00\x00\x0a')[1]
@@ -163,13 +161,6 @@ elif srv_ and b"\x00\x21\x00\x01\x00\x00\x00\x0a" in recv_data: # SRV (Server Se
 
 	
 # 4. 결론
-mDNS 프로토콜을 사용중인 대상으로 수행할 경우 아래와 같이 데이터가 출력되며 mDNS 프로토콜 뿐만 아닌 SSDP, NBNS 등도 이와 같이 프로토콜을 분석한 후 원하는 데이터를 파싱하여 사용한다.
+mDNS 프로토콜을 사용중인 대상으로 수행할 경우 아래와 같은 데이터를 얻어올 수 있으며 mDNS 프로토콜 뿐만 아닌 SSDP, NBNS 등도 이와 같이 프로토콜을 분석한 후 원하는 데이터를 얻어와 용도에 맞게 사용할 수 있다.
 ```python3 mdns_scan.py 192.168.0.45```
 ![image](https://user-images.githubusercontent.com/40857478/121629192-9f927900-cab5-11eb-9bc3-81b82f5441d9.png)
-	
-# 5. Reference
-* [mDNS RFC 6763](https://datatracker.ietf.org/doc/html/rfc6763)
-
-* [DNS-SD RFC 6762](https://datatracker.ietf.org/doc/html/rfc6762)
-
-* [DNS-SD Service Type List](http://dns-sd.org/ServiceTypes.html)
