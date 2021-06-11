@@ -3,17 +3,17 @@
 # 1. 개요
 UDP/5353 서비스인 mDNS(Multicast DNS)는 zeroconf 기술로 DHCP 환경이 없는 네트워크에서 프린터 등의 호스트를 찾아 자동으로 연결해주는데 사용된다. (etc/hosts)
 
-기본적으로 DNS에 기반하여 동작이 이루어지지만 mDNS 위에 DNS-SD(DNS Service Discovery)를 빌드하여 사용할 경우 기기를 대상으로 PTR 레코드 Type으로 호스트네임, 서비스 목록을 Query하면 Answers 필드에서 PTR/TXT/SRV/A Type으로 응답하며 각 Type의 데이터들을 이용하여 기기의 정보를 얻어올수 있다.
+기본적으로 DNS에 기반하여 동작이 이루어지지만 mDNS 위에 DNS-SD(DNS Service Discovery)를 빌드하여 사용할 경우 PTR Type으로 호스트네임, 서비스 목록을 Query하면 응답된 패킷의 Answers 필드에서 PTR/TXT/SRV/A 각 Type의 데이터들을 이용하여 정보를 얻어올수 있다.
 
-PTR : 서비스 도메인 이름
+* PTR : 서비스 도메인 이름
 
-TXT : 서비스에 대한 추가적인 정보
+* TXT : 서비스에 대한 추가적인 정보
 
-SRV : PTR에서 우선순위, 가중치, 포트를 추가적으로 제공 (우선순위, 가중치 사용x)
+* SRV : PTR에서 우선순위, 가중치, 포트를 추가적으로 제공 (우선순위, 가중치 사용x)
 
-AAAA : IPv6 (사용x)
+* AAAA : IPv6 (사용x)
 
-A : IPv4 (사용x)
+* A : IPv4 (사용x)
 
 
 http://dns-sd.org/ServiceTypes.html 에서 요청할 수 있는 서비스 목록을 볼 수 있지만 무수한 종류를 쿼리하기엔 리소스 제한이 존재하여 Service.dns-sd.local 쿼리를 이용한다.
