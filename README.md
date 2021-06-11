@@ -23,7 +23,7 @@ UDP/5353 mDNS(Multicast DNS)는 zeroconf로 DHCP 환경이 없는 네트워크�
 * import socket
 * import sys
 * import binascii
-<br>
+
 # 3. 과정
 * 실행할 때 인자로 받은 IP 주소를 "." 기준으로 나누어 저장하며 저장된 길이 값과 나누어진 IP 주소를 16진수 데이터로 만들고 주소 순서를 Reverse로 Standard Query를 요청한다. ex) 192.168.0.45 -> 45.0.168.192 -> '\x02\x34\x35 \x01\x30 \x03\x31\x36\x38 \x03\x31\x39\x32'
 ```
@@ -58,6 +58,7 @@ def host_query():
 ```
 
 ![image](https://user-images.githubusercontent.com/40857478/121622112-5c7dd900-caa8-11eb-990f-670ffcb14352.png)
+
 <br><br><br>
 * HostName Query가 끝나고 Service List Query를 수행하는데 요청하기 위해선 [DNS-SD Service Type List](http://dns-sd.org/ServiceTypes.html)목록에서 확인할 수 있는 services.dns-sd.udp.local 유형으로 Standard Query를 요청한다.
 ```
@@ -159,7 +160,6 @@ elif srv_ and b"\x00\x21\x00\x01\x00\x00\x00\x0a" in recv_data: # SRV (Server Se
 ```
 ![image](https://user-images.githubusercontent.com/40857478/121630911-06fdf800-cab9-11eb-8be8-e507d5449aa3.png)
 
-<br><br>
 # 4. 결과
 ```python3 mdns_scan.py 192.168.0.45```
 ![image](https://user-images.githubusercontent.com/40857478/121629192-9f927900-cab5-11eb-9bc3-81b82f5441d9.png)
