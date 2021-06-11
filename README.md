@@ -21,10 +21,10 @@ UDP/5353 서비스인 mDNS(Multicast DNS)는 zeroconf 기술로 DHCP 환경이 �
 * import binascii
 
 # 3. 과정
->example) Python3 mdns_scan.py <IP>
+example) Python3 mdns_scan.py <IP>
 
 * Python 코드를 실행할 때 IP를 인자로 하여 Host Name Query 패킷을 생성하여 요청한다
->def host_query_pkt():
+def host_query_pkt():
         ip_byte=[]
         reverse = (target.split('.'))
         for i, k in zip(reverse, range(4)):
@@ -36,6 +36,7 @@ UDP/5353 서비스인 mDNS(Multicast DNS)는 zeroconf 기술로 DHCP 환경이 �
         host_pkt = b'\x00\x00\x01\x00\x00\x01\x00\x00\x00\x00\x00\x00' + addr_arpa
 
         return host_pkt, addr_arpa
+        
 ![image](https://user-images.githubusercontent.com/40857478/121495154-58a07700-ca14-11eb-89a0-fd03d04053a3.png)
 
 
