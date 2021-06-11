@@ -1,4 +1,4 @@
-# mDNS UDP 프로토콜 Queries - Answers 데이터 파싱
+# <center>mDNS UDP 프로토콜 Queries - Answers 데이터 파싱</center>
 
 # 1. 개요
 UDP/5353 서비스인 mDNS(Multicast DNS)는 zeroconf 기술로 DHCP 환경이 없는 네트워크에서 프린터 등의 호스트를 찾아 자동으로 연결해주는데 사용된다. (etc/hosts)
@@ -67,4 +67,5 @@ Python 코드에서 사용되는 모듈은 아래와 같다.
 
 # 4. Reference
 [RFC 6763](https://datatracker.ietf.org/doc/html/rfc6763)
+
 [RFC 6762](https://datatracker.ietf.org/doc/html/rfc6762)
