@@ -5,6 +5,8 @@ UDP/5353 서비스인 mDNS(Multicast DNS)는 zeroconf 기술로 DHCP 환경이 �
 
 기본적으로 DNS에 기반하여 동작이 이루어지지만 mDNS 위에 DNS-SD(DNS Service Discovery)를 빌드하여 사용할 경우 PTR Type으로 호스트네임, 서비스 목록을 Query하면 응답된 패킷의 Answers 필드에서 PTR/TXT/SRV/A 각 Type의 데이터들을 이용하여 정보를 얻어올수 있다.
 
+서비스 목록을 요청할 때는 service.dns-sd.udp.local 을 사용한다.
+
 * PTR : 서비스 도메인 이름
 
 * TXT : 서비스에 대한 추가적인 정보
@@ -19,12 +21,12 @@ UDP/5353 서비스인 mDNS(Multicast DNS)는 zeroconf 기술로 DHCP 환경이 �
 http://dns-sd.org/ServiceTypes.html 에서 요청할 수 있는 서비스 목록을 볼 수 있지만 무수한 종류를 쿼리하기엔 리소스 제한이 존재하여 Service.dns-sd.local 쿼리를 이용한다.
 
 # 2. Python
-Python 코드에서 사용되는 모듈은 아래와 같다.
-1. socket -> 소켓 통신
-2. sys -> IP 인자
-3. binascii -> IP 거꾸로
+코드에서 사용되는 모듈은 아래와 같다.
+* import socket
+* import sys
+* import binascii
 
-# 3. 설명
+# 3. 본문
 첨부된 Python 코드의 전체 요청 순서는 아래와 같다.
 1. UDP/5353 서비스가 활성화된 기기를 대상으로 IP 기반 Host Name을 요청한다
 
