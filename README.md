@@ -14,7 +14,7 @@ UDP/5353 서비스인 mDNS(Multicast DNS)는 zeroconf 기술로 DHCP 환경이 �
 * ~~A : IPv4~~
 
 # 2. Python3
-**example) Python3 mdns_scan.py <IP>**
+**example) Python3 mdns_scan.py target**
 	
 코드에서 사용되는 모듈은 아래와 같으며 최대한 내장 모듈을 이용하여 작성하였다.
 
