@@ -13,14 +13,14 @@ UDP/5353 서비스인 mDNS(Multicast DNS)는 zeroconf 기술로 DHCP 환경이 �
 * ~~AAAA : IPv6~~
 * ~~A : IPv4~~
 
-# 2. Python
+# 2. Python3
 코드에서 사용되는 모듈은 아래와 같으며 최대한 내장 모듈을 이용하여 작성하였다.
 
 * import socket
 * import sys
 * import binascii
 
-# 3. 본문
+# 3. 처리 순서
 첨부된 Python 코드의 전체 요청 순서는 아래와 같다.
 1. UDP/5353 서비스가 활성화된 기기를 대상으로 IP 기반 Host Name을 요청한다
 
@@ -61,7 +61,10 @@ UDP/5353 서비스인 mDNS(Multicast DNS)는 zeroconf 기술로 DHCP 환경이 �
 
 ![image](https://user-images.githubusercontent.com/40857478/121497348-4fb0a500-ca16-11eb-8738-e21ac36f5f0e.png)
 
-# 4. Reference
+# 4. 결론
+mDNS 프로토콜을 사용중인 대상으로 수행할 경우 아래와 같이 데이터가 출력되며 mDNS 프로토콜 뿐만 아닌 SSDP, NBNS .. 등도 이와 같이 프로토콜을 분석하여 패킷을 전송한 후 데이터를 파싱하여 사용한다.
+
+# 5. Reference
 [mDNS RFC 6763](https://datatracker.ietf.org/doc/html/rfc6763)
 
 [DNS-SD RFC 6762](https://datatracker.ietf.org/doc/html/rfc6762)
