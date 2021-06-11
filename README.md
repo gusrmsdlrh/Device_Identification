@@ -162,7 +162,7 @@ elif srv_ and b"\x00\x21\x00\x01\x00\x00\x00\x0a" in recv_data: # SRV (Server Se
 
 # 4. 결과
 **python3 mdns_scan.py 192.168.0.45**
-<br>
+<br><br>
 ![image](https://user-images.githubusercontent.com/40857478/121629192-9f927900-cab5-11eb-9bc3-81b82f5441d9.png)
 <br><br>
 mDNS 프로토콜을 사용중인 대상으로 수행할 경우 기기의 타입을 유추할 수 있는 데이터를 얻어올 수 있으며 SSDP, NBNS 등의 UDP 프로토콜도 이와 같이 사용할 수 있다.
