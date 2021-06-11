@@ -1,4 +1,4 @@
-# <center> mDNS UDP 프로토콜 Queries - Answers 데이터 파싱 </center>
+# <center> mDNS UDP 프로토콜 Queries - Answers 데이터 파싱 코드</center>
 
 # 1. 개요
 UDP/5353 서비스인 mDNS(Multicast DNS)는 zeroconf 기술로 DHCP 환경이 없는 네트워크에서 프린터 등의 호스트(/etc/hosts)를 찾아 자동으로 연결해주는데 사용된다.<br>
@@ -20,10 +20,22 @@ UDP/5353 서비스인 mDNS(Multicast DNS)는 zeroconf 기술로 DHCP 환경이 �
 * import sys
 * import binascii
 
-# 3. 처리 순서
-첨부된 Python 코드의 전체 요청 순서는 아래와 같다.
-1. UDP/5353 서비스가 활성화된 기기를 대상으로 IP 기반 Host Name을 요청한다
+# 3. 과정
+>example) Python3 mdns_scan.py <IP>
 
+* Python 코드를 실행할 때 IP를 인자로 하여 Host Name Query 패킷을 생성하여 요청한다
+>def host_query_pkt():
+        ip_byte=[]
+        reverse = (target.split('.'))
+        for i, k in zip(reverse, range(4)):
+                ip_byte.append(binascii.unhexlify('0' + str(len(i))))
+                globals()['var_{}'.format(k)] = ip_byte[k]+reverse[k].encode()
+        
+        addr_arpa = var_3 + var_2 + var_1+ var_0 + b'\x07\x69\x6e\x2d\x61\x64\x64\x72\x04\x61\x72\x70\x61\x00\x00\x0c\x00\x01'
+
+        host_pkt = b'\x00\x00\x01\x00\x00\x01\x00\x00\x00\x00\x00\x00' + addr_arpa
+
+        return host_pkt, addr_arpa
 ![image](https://user-images.githubusercontent.com/40857478/121495154-58a07700-ca14-11eb-89a0-fd03d04053a3.png)
 
 
