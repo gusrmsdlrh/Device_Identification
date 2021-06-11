@@ -23,7 +23,7 @@ UDP/5353 서비스인 mDNS(Multicast DNS)는 zeroconf 기술로 DHCP 환경이 �
 * import binascii
 
 # 3. 과정
-* 실행할 때 인자로 받은 IP 주소를 "." 기준으로 나누어 저장하여 저장된 길이 값과 나누어진 IP 주소를 16진수 데이터로 만들고 IP 주소는 Reverse로 하여 Standard Query를 요청하게 된다. ex) 192.168.0.45 -> 45.0.168.192 -> '\x02\x34\x35 \x01\x30 \x03\x31\x36\x38 \x03\x31\x39\x32'
+* 실행할 때 인자로 받은 IP 주소를 "." 기준으로 나누어 저장하여 저장된 길이 값과 나누어진 IP 주소를 16진수 데이터로 만들고 주소 순서를 Reverse로 Standard Query를 요청. ex) 192.168.0.45 -> 45.0.168.192 -> '\x02\x34\x35 \x01\x30 \x03\x31\x36\x38 \x03\x31\x39\x32'
 ```
 def host_query_pkt():
         ip_byte=[]
@@ -39,7 +39,7 @@ def host_query_pkt():
 ![image](https://user-images.githubusercontent.com/40857478/121621321-eaf15b00-caa6-11eb-8807-758686f09de8.png)
 
 	
-*  HostName을 요청하여 응답된 패킷이 온다면 Answers 필드의 'Data length'의 값을 기준으로 데이터를 가져와 출력하고 서비스 Query를 수행하게 된다.
+*  HostName을 요청하여 응답 패킷이 온다면 Answers 필드에서 'Data length'의 값을 구한 길이만큼 데이터를 가져와 출력한다.
 ```
 def host_query():
         sock = sock_create()
@@ -57,7 +57,7 @@ def host_query():
 
 ![image](https://user-images.githubusercontent.com/40857478/121622112-5c7dd900-caa8-11eb-990f-670ffcb14352.png)
 
-* 서비스 목록을 요청하기 위해 services.dns-sd.udp.local 유형으로 Standard Query 패킷을 작성하여 Request 한다 (Reference의 dns-sd list 참조)
+* HostName Query가 끝나고 서비스 목록 Query를 수행하는데 요청하기 위해선 services.dns-sd.udp.local 유형으로 Standard Query 패킷을 요청한다 (Reference의 dns-sd list 참조)
 ```
 def service_query():
         base = b'\x00\x00\x01\x00\x00\x01\x00\x00\x00\x00\x00\x00'
@@ -70,23 +70,24 @@ def service_query():
 ```
 ![image](https://user-images.githubusercontent.com/40857478/121628791-e895fd80-cab4-11eb-9a53-b4a5d3c3e232.png)
 
-4. Response 패킷이 존재한다면 Answers 필드에서 ServiceName 데이터를 추출하기 위해 Queries 필드를 기준으로 나누어진 데이터에서 Answers 필드의 공통 Field로 한번 더 나누어 ServiceName을 얻어온다.
+* 서비스 목록을 요청하여 응답 패킷이 존재한다면 Answers 필드에서 ServiceName 데이터들을 추출하기 위해 Queries 필드를 기준으로 나누어진 데이터에서 Answers 공통 Field로 한번 더 나누어 ServiceName을 얻어온다.<br>
+* 얻어온 ServiceName을 이후 재 요청하기 위해서 도메인 데이터를 추가한다
 ```
 data=sock.recv(1024).split(service_list_req) # Queries Field Split
 
-                service_raw=data[1].split(b'\xc0\x0c\x00\x0c') # Answers Field service name Split
-                for i in range(1,len(service_raw)):
-                        if b'\x5f\x74\x63\x70' in service_raw[i][8:-2] or b'\x5f\x75\x64\x70' in service_raw[i][8:-2]:
-                                service_type(base, service_raw[i][8:-2]+b'\x05\x6c\x6f\x63\x61\x6c\x00\x00\x0c\x00\x01') #.local
-                        elif b'\x5f\x74\x63\x70' not in service_raw[i][8:-2]:
-                                service_type(base, service_raw[i][8:-2]+b'\x04\x5f\x74\x63\x70\x05\x6c\x6f\x63\x61\x6c\x00\x00\x0c\x00\x01') # _tcp.local
-                        else:
-                                service_type(base, service_raw[i][8:-2]+b'\x04\x5f\x75\x64\x70\x05\x6c\x6f\x63\x61\x6c\x00\x00\x0c\x00\x01') # _udp.local
+service_raw=data[1].split(b'\xc0\x0c\x00\x0c') # Answers Field service name Split
+	for i in range(1,len(service_raw)):
+		if b'\x5f\x74\x63\x70' in service_raw[i][8:-2] or b'\x5f\x75\x64\x70' in service_raw[i][8:-2]:
+			service_type(base, service_raw[i][8:-2]+b'\x05\x6c\x6f\x63\x61\x6c\x00\x00\x0c\x00\x01') #.local
+		elif b'\x5f\x74\x63\x70' not in service_raw[i][8:-2]:
+			service_type(base, service_raw[i][8:-2]+b'\x04\x5f\x74\x63\x70\x05\x6c\x6f\x63\x61\x6c\x00\x00\x0c\x00\x01') # _tcp.local
+		else:
+			service_type(base, service_raw[i][8:-2]+b'\x04\x5f\x75\x64\x70\x05\x6c\x6f\x63\x61\x6c\x00\x00\x0c\x00\x01') # _udp.local
 ```
 ![image](https://user-images.githubusercontent.com/40857478/121628836-fc416400-cab4-11eb-8b21-b92edf2fdad0.png)
 
 	
-5. 각 Service Name을 기준으로 Query 패킷을 재 작성하여 Request 한다
+* 받아온 Service Name 데이터를 기준으로 Query 패킷을 재 작성하여 요청한다
 ```
 def service_type(base, service_req):
         print("\"" + service_req[1:-10].decode() + "\"")
@@ -100,19 +101,22 @@ def service_type(base, service_req):
 ![image](https://user-images.githubusercontent.com/40857478/121630771-beded580-cab8-11eb-8911-83fc2ba84785.png)
 
 	
-6. Response 패킷의 Answers 필드에서 Type(PTR, TXT, SRV)에 맞게 분류하며 수행한다.
+* 각 서비스별 요청의 응답 패킷이 존재한다면 Answers 필드에서 PTR/TXT/SRV Type 데이터에 맞게 분류하며 수행한다.
 ```
 recv_data=sock.recv(1024)
 
 for i in range(len(recv_data.split(b'\x00\x01\x00\x00\x00\x0a'))): # type
 	if ptr_ and b"\x00\x0c\x00\x01\x00\x00\x00\x0a" in recv_data: # PTR (domain name PoinTeR)
+		[...]
 	elif txt_ and b"\x00\x10\x00\x01\x00\x00\x00\x0a" in recv_data: # TXT (Text strings)
+		[...]
 	elif srv_ and b"\x00\x21\x00\x01\x00\x00\x00\x0a" in recv_data: # SRV (Server Selection)
+		[...]
 ```
 ![image](https://user-images.githubusercontent.com/40857478/121630816-d1590f00-cab8-11eb-9c06-d2f4e82c38c0.png)
 
 
-7. PTR, SRV Type은 Data Length 필드의 값을 가져와 그 뒤의 데이터 길이만큼 가져와 출력한다.
+* PTR, SRV Type은 'Data length'의 값을 구한 길이만큼 데이터를 가져와 출력하는데 SRV Type의 Port 데이터는 따로 추출하여 출력한다.
 ```
 if ptr_ and b"\x00\x0c\x00\x01\x00\x00\x00\x0a" in recv_data: # PTR (domain name PoinTeR)
 	ptr_data=recv_data.split(b'\x00\x0c\x00\x01\x00\x00\x00\x0a')[1]
@@ -128,7 +132,8 @@ elif srv_ and b"\x00\x21\x00\x01\x00\x00\x00\x0a" in recv_data: # SRV (Server Se
 ![image](https://user-images.githubusercontent.com/40857478/121630880-efbf0a80-cab8-11eb-9bf3-a49013c3d139.png)
 
 	
-8. TXT Type은 Total Length와 TXT Length가 존재하는데 Total Length와 비교하여 TXT Length의 각 데이터들을 파싱하여 출력한다.
+* TXT Type은 Data length와 TXT Length가 존재하는데 Data length는 총 데이터 길이의 값이고 TXT Length는 해당 필드 데이터의 길이 값을 의미한다. <br>
+* 먼저 TXT Length 값만큼 데이터를 출력하는 반복문을 작성하는데 이때 TXT Length와 실제 데이터를 합한 것을 Data length와 비교하여 같을때까지 수행하게 된다.
 ```
  elif txt_ and b"\x00\x10\x00\x01\x00\x00\x00\x0a" in recv_data: # TXT (Text strings)
 	txt_data=recv_data.split(b'\x00\x10\x00\x01\x00\x00\x00\x0a')[1]
@@ -155,7 +160,7 @@ elif srv_ and b"\x00\x21\x00\x01\x00\x00\x00\x0a" in recv_data: # SRV (Server Se
 
 	
 # 4. 결론
-mDNS 프로토콜을 사용중인 대상으로 수행할 경우 아래와 같이 데이터가 출력되며 mDNS 프로토콜 뿐만 아닌 SSDP, NBNS .. 등도 이와 같이 프로토콜을 분석하여 패킷을 전송한 후 데이터를 파싱하여 사용한다.
+mDNS 프로토콜을 사용중인 대상으로 수행할 경우 아래와 같이 데이터가 출력되며 mDNS 프로토콜 뿐만 아닌 SSDP, NBNS 등도 이와 같이 프로토콜을 분석한 후 원하는 데이터를 파싱하여 사용한다.
 ```python3 mdns_scan.py 192.168.0.45```
 ![image](https://user-images.githubusercontent.com/40857478/121629192-9f927900-cab5-11eb-9bc3-81b82f5441d9.png)
 	
