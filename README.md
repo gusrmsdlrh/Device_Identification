@@ -24,18 +24,20 @@ UDP/5353 서비스인 mDNS(Multicast DNS)는 zeroconf 기술로 DHCP 환경이 �
 
 # 3. 과정
 * Python 코드를 실행할 때 IP를 인자로 하여 Host Name Query 패킷을 생성하여 요청하며 이때 인자로 받은 IP를 "." 기준으로 나눈 뒤 각 hex 값으로 영역의 길이를 표현한 후 length+IP 값으로 반대로 패킷에 붙인다.
-
-        def host_query_pkt():
-                ip_byte=[]
-                reverse = (target.split('.'))
-                for i, k in zip(reverse, range(4)):
-                        ip_byte.append(binascii.unhexlify('0' + str(len(i))))
-                        globals()['var_{}'.format(k)] = ip_byte[k]+reverse[k].encode()
+```
+def host_query_pkt():
+        ip_byte=[]
+        reverse = (target.split('.'))
+        for i, k in zip(reverse, range(4)):
+                ip_byte.append(binascii.unhexlify('0' + str(len(i))))
+                globals()['var_{}'.format(k)] = ip_byte[k]+reverse[k].encode()
         
-                addr_arpa = var_3 + var_2 + var_1+ var_0 + b'\x07\x69\x6e\x2d\x61\x64\x64\x72\x04\x61\x72\x70\x61\x00\x00\x0c\x00\x01'
-                host_pkt = b'\x00\x00\x01\x00\x00\x01\x00\x00\x00\x00\x00\x00' + addr_arpa
-                return host_pkt, addr_arpa
+        addr_arpa = var_3 + var_2 + var_1+ var_0 + b'\x07\x69\x6e\x2d\x61\x64\x64\x72\x04\x61\x72\x70\x61\x00\x00\x0c\x00\x01'
 
+        host_pkt = b'\x00\x00\x01\x00\x00\x01\x00\x00\x00\x00\x00\x00' + addr_arpa
+
+        return host_pkt, addr_arpa
+```
 ![image](https://user-images.githubusercontent.com/40857478/121621321-eaf15b00-caa6-11eb-8807-758686f09de8.png)
 
 * 응답 데이터에서 Host Name 데이터를 파싱한다.
