@@ -1,4 +1,4 @@
-<center># mDNS UDP 프로토콜 Queries - Answers 데이터 파싱</center>
+# <center> mDNS UDP 프로토콜 Queries - Answers 데이터 파싱 </center>
 
 # 1. 개요
 UDP/5353 서비스인 mDNS(Multicast DNS)는 zeroconf 기술로 DHCP 환경이 없는 네트워크에서 프린터 등의 호스트를 찾아 자동으로 연결해주는데 사용된다. (etc/hosts)
