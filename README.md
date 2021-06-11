@@ -10,9 +10,9 @@ UDP/5353 서비스인 mDNS(Multicast DNS)는 zeroconf 기술로 DHCP 환경이 �
 
 * SRV : PTR에서 ~~Priority, Weight,~~ Port를 추가적으로 제공
 
-* ~~AAAA : IPv6
+* ~~AAAA : IPv6~~
 
-* ~~A : IPv4
+* ~~A : IPv4~~
 
 
 http://dns-sd.org/ServiceTypes.html 에서 요청할 수 있는 서비스 목록을 볼 수 있지만 무수한 종류를 쿼리하기엔 리소스 제한이 존재하여 Service.dns-sd.local 쿼리를 이용한다.
