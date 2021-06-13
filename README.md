@@ -3,13 +3,13 @@
 # 1. 개요
 [mDNS RFC 6763](https://datatracker.ietf.org/doc/html/rfc6763), [DNS-SD RFC 6762](https://datatracker.ietf.org/doc/html/rfc6762) <br>
 
-UDP/5353 mDNS(Multicast DNS)는 zeroconf로 DHCP 환경이 없는 네트워크에서 프린터 등의 호스트(/etc/hosts)를 찾아 자동으로 연결해주는데 사용된다.<br>
+UDP/5353 mDNS(Multicast DNS)는 zeroconf로 DHCP 환경이 없는 네트워크에서 프린터 등의 호스트(/etc/hosts)를 찾아 자동으로 연결해주는 데 사용된다.<br>
 
-기본적으로 DNS에 기반하여 동작이 이루어지지만 mDNS 위에 DNS-SD(DNS Service Discovery)를 빌드하여 사용할 경우 PTR Type으로 호스트네임, 서비스 목록을 Query하면 응답된 패킷의 Answers 필드에서 PTR/TXT/SRV/A 각 Type의 데이터들을 이용하여 정보를 얻어올수 있으며 이러한 정보로 대상의 타입을 유추할 수 있게 된다.
+기본적으로 DNS에 기반하여 동작이 이루어지지만 mDNS 위에 DNS-SD(DNS Service Discovery)를 빌드하여 사용할 경우 PTR Type으로 호스트 네임, 서비스 목록을 Query 하면 응답된 패킷의 Answers 필드에서 PTR/TXT/SRV/A 각 Type의 데이터들을 이용하여 정보를 얻어올 수 있으며 이러한 정보로 대상의 타입을 유추할 수 있게 된다.
 
 * PTR : 서비스 도메인 이름
 * TXT : 서비스에 대한 추가적인 정보
-* SRV : PTR에서 ~~Priority, Weight,~~ Port를 추가적으로 제공
+* SRV : PTR에서 ~~Priority, Weight,~~ Port를 추가로 제공
 * ~~AAAA : IPv6~~
 * ~~A : IPv4~~
 
@@ -73,8 +73,8 @@ def service_query():
 ```
 ![image](https://user-images.githubusercontent.com/40857478/121628791-e895fd80-cab4-11eb-9a53-b4a5d3c3e232.png)
 <br><br>
-* Service List을 요청하여 응답 패킷이 온다면 Answers 필드에서 ServiceName 데이터들을 추출하기 위해 Answers 필드의 공통 데이터로 나누면 각 리스트 데이터의 일정한 offset에서 ServiceName을 얻어올 수 있다.<br>
-* 그리고 ServiceName을 재 요청하기 위해서는 도메인 데이터가 필요하기에 얻어온 Service Name에 도메인 데이터가 존재하지 않으면 추가하여 전달한다.
+* Service List를 요청하여 응답 패킷이 온다면 Answers 필드에서 ServiceName 데이터들을 추출하기 위해 Answers 필드의 공통 데이터로 나누면 각 리스트 데이터의 일정한 offset에서 ServiceName을 얻어올 수 있다.<br>
+* 그리고 ServiceName을 재요청하기 위해서는 도메인 데이터가 필요하기에 얻어온 Service Name에 도메인 데이터가 존재하지 않으면 추가하여 전달한다.
 ```
 data=sock.recv(1024)
 
@@ -90,7 +90,7 @@ service_raw=data.split(b'\xc0\x0c\x00\x0c') # Answers Field service name Split
 ![image](https://user-images.githubusercontent.com/40857478/121628836-fc416400-cab4-11eb-8b21-b92edf2fdad0.png)
 
 <br><br>
-* 전달받은 ServiceName으로 Query 패킷을 재 작성하여 요청한다.
+* 전달받은 ServiceName으로 Query 패킷을 재작성하여 요청한다.
 ```
 def service_type(base, service_req):
         print("\"" + service_req[1:-10].decode() + "\"")
@@ -104,7 +104,7 @@ def service_type(base, service_req):
 ![image](https://user-images.githubusercontent.com/40857478/121630771-beded580-cab8-11eb-8911-83fc2ba84785.png)
 
 <br><br>
-* 각 ServiceName별로 응답 패킷이 존재한다면 Answers 필드에서 공통 데이터로 나누어진 값들에서 PTR/TXT/SRV Type 데이터가 존재하면 수행하게 된다.
+* 각 ServiceName 별로 응답 패킷이 존재한다면 Answers 필드에서 공통 데이터로 나누어진 값들에서 PTR/TXT/SRV Type 데이터가 존재하면 수행하게 된다.
 ```
 recv_data=sock.recv(1024)
 for i in range(len(recv_data.split(b'\x00\x01\x00\x00\x00\x0a'))): # type
@@ -118,7 +118,7 @@ for i in range(len(recv_data.split(b'\x00\x01\x00\x00\x00\x0a'))): # type
 ![image](https://user-images.githubusercontent.com/40857478/121630816-d1590f00-cab8-11eb-9c06-d2f4e82c38c0.png)
 
 <br><br><br>
-* PTR, SRV Type 의 내부 로직은 Type 데이터로 나누어진 값에서 Data length의 값을 구하여 데이터를 출력한다.
+* PTR, SRV Type의 내부 로직은 Type 데이터로 나누어진 값에서 Data length의 값을 구하여 데이터를 출력한다.
 ```
 if ptr_ and b"\x00\x0c\x00\x01\x00\x00\x00\x0a" in recv_data: # PTR (domain name PoinTeR)
 	ptr_data=recv_data.split(b'\x00\x0c\x00\x01\x00\x00\x00\x0a')[1]
@@ -134,8 +134,8 @@ elif srv_ and b"\x00\x21\x00\x01\x00\x00\x00\x0a" in recv_data: # SRV (Server Se
 ![image](https://user-images.githubusercontent.com/40857478/121630880-efbf0a80-cab8-11eb-9bf3-a49013c3d139.png)
 
 <br><br>
-* TXT Type은 Data length와 TXT Length 두개가 존재하는데 Data length는 총 데이터의 길이 값이고 TXT Length는 해당 필드 데이터의 길이 값을 의미한다. <br>
-* 먼저 Data length 값을 저장한 후 TXT Length 값만큼 데이터를 출력하는 반복문을 수행하는데 이때 TXT Length 값에 +1 씩 더하여 축적된 값과 Data length 값을 비교하여 같을때까지 수행하면 모든 TXT 데이터를 얻어올 수 있게 된다.
+* TXT Type은 Data length와 TXT Length 두 개가 존재하는데 Data length는 총 데이터의 길잇값이고 TXT Length는 해당 필드 데이터의 길잇값을 의미한다. <br>
+* 먼저 Data length 값을 저장한 후 TXT Length 값만큼 데이터를 출력하는 반복문을 수행하는데 이때 TXT Length 값에 +1 씩 더하여 축적된 값과 Data length 값을 비교하여 같을 때까지 수행하면 모든 TXT 데이터를 얻어올 수 있게 된다.
 ```
  elif txt_ and b"\x00\x10\x00\x01\x00\x00\x00\x0a" in recv_data: # TXT (Text strings)
 	txt_data=recv_data.split(b'\x00\x10\x00\x01\x00\x00\x00\x0a')[1]
@@ -165,4 +165,4 @@ elif srv_ and b"\x00\x21\x00\x01\x00\x00\x00\x0a" in recv_data: # SRV (Server Se
 <br><br>
 ![image](https://user-images.githubusercontent.com/40857478/121629192-9f927900-cab5-11eb-9bc3-81b82f5441d9.png)
 <br><br>
-mDNS 프로토콜을 사용중인 대상으로 수행할 경우 기기의 타입을 유추할 수 있는 정보들을 얻어올 수 있으며 SSDP, NBNS 등의 UDP 프로토콜도 이와 같이 사용할 수 있다.
+mDNS 프로토콜을 사용 중인 대상으로 수행할 경우 기기의 타입을 유추할 수 있는 정보들을 얻어올 수 있으며 SSDP, NBNS 등의 UDP 프로토콜도 이처럼 사용할 수 있다.
