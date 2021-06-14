@@ -1,7 +1,7 @@
 # <center> mDNS UDP 프로토콜 Queries - Answers 데이터 파싱</center>
 
 # 1. 개요
-다수의 프토토콜을 분석하였으며 그 중 [UDP-Based Active Scan for IoT Security (UAIS)](http://itiis.org/digital-library/24228) 논문에서 활용된 mDNS 프로토콜의 예제<br>
+다수의 프토토콜을 분석하였으며 그 중 [UDP-Based Active Scan for IoT Security (UAIS)](http://itiis.org/digital-library/24228) 논문에서 활용된 mDNS 프로토콜의 예제이다<br>
 
 UDP/5353 mDNS(Multicast DNS)는 zeroconf로 DHCP 환경이 없는 네트워크에서 프린터 등의 호스트(/etc/hosts)를 찾아 자동으로 연결해주는 데 사용된다.<br>
 
