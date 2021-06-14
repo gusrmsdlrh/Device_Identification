@@ -1,4 +1,4 @@
-# <center> mDNS UDP 프로토콜 Queries - Answers 데이터 파싱</center>
+# <center> mDNS 프로토콜 Queries - Answers 데이터 파싱</center>
 
 # 1. 개요
 다수의 프토토콜 중 [UDP-Based Active Scan for IoT Security (UAIS)](http://itiis.org/digital-library/24228) 논문에서 활용된 mDNS 프로토콜의 예제이다<br>
