@@ -41,7 +41,7 @@ def host_query_pkt():
 ![image](https://user-images.githubusercontent.com/40857478/121621321-eaf15b00-caa6-11eb-8807-758686f09de8.png)
 <br>
 
-
+<br>
 *  HostName을 요청하여 응답 패킷이 온다면 Answers 필드의 고정된 데이터를 기준으로 나누고 Data length의 값만큼 데이터를 읽어온다면 HostName을 얻을 수 있다. 이때 접미사 .local은 제거하고 출력한다.
 ```
 def host_query():
@@ -61,7 +61,7 @@ def host_query():
 ![image](https://user-images.githubusercontent.com/40857478/121622112-5c7dd900-caa8-11eb-990f-670ffcb14352.png)
 <br>
 
-
+<br>
 * HostName Query가 끝나고 Service List Query를 수행하는데 요청하기 위해선 [DNS-SD Service Type List](http://dns-sd.org/ServiceTypes.html) 목록에서 확인할 수 있는 services.dns-sd.udp.local 유형으로 Standard Query를 요청한다.
 ```
 def service_query():
@@ -76,7 +76,7 @@ def service_query():
 ![image](https://user-images.githubusercontent.com/40857478/121628791-e895fd80-cab4-11eb-9a53-b4a5d3c3e232.png)
 <br>
 
-
+<br>
 * Service List를 요청하여 응답 패킷이 온다면 Answers 필드에서 ServiceName 데이터들을 추출하기 위해 Answers 필드의 공통 데이터로 나누면 각 리스트 데이터의 일정한 offset에서 ServiceName을 얻어올 수 있다.<br>
 * 그리고 ServiceName을 재요청하기 위해서는 도메인 데이터가 필요하기에 얻어온 Service Name에 도메인 데이터가 존재하지 않으면 추가하여 전달한다.
 ```
@@ -94,7 +94,7 @@ service_raw=data.split(b'\xc0\x0c\x00\x0c') # Answers Field service name Split
 ![image](https://user-images.githubusercontent.com/40857478/121628836-fc416400-cab4-11eb-8b21-b92edf2fdad0.png)
 <br>
 
-
+<br>
 * 전달받은 ServiceName으로 Query 패킷을 재작성하여 요청한다.
 ```
 def service_type(base, service_req):
@@ -109,7 +109,7 @@ def service_type(base, service_req):
 ![image](https://user-images.githubusercontent.com/40857478/121630771-beded580-cab8-11eb-8911-83fc2ba84785.png)
 <br>
 
-
+<br>
 * 각 ServiceName 별로 응답 패킷이 존재한다면 Answers 필드에서 공통 데이터로 나누어진 값들에서 PTR/TXT/SRV Type 데이터가 존재하면 수행하게 된다.
 ```
 recv_data=sock.recv(1024)
@@ -124,7 +124,7 @@ for i in range(len(recv_data.split(b'\x00\x01\x00\x00\x00\x0a'))): # type
 ![image](https://user-images.githubusercontent.com/40857478/121630816-d1590f00-cab8-11eb-9c06-d2f4e82c38c0.png)
 <br>
 
-
+<br>
 * PTR, SRV Type의 내부 로직은 Type 데이터로 나누어진 값에서 Data length의 값을 구하여 데이터를 출력한다.
 ```
 if ptr_ and b"\x00\x0c\x00\x01\x00\x00\x00\x0a" in recv_data: # PTR (domain name PoinTeR)
@@ -141,7 +141,7 @@ elif srv_ and b"\x00\x21\x00\x01\x00\x00\x00\x0a" in recv_data: # SRV (Server Se
 ![image](https://user-images.githubusercontent.com/40857478/121630880-efbf0a80-cab8-11eb-9bf3-a49013c3d139.png)
 <br>
 
-
+<br>
 * TXT Type은 Data length와 TXT Length 두 개가 존재하는데 Data length는 총 데이터의 길잇값이고 TXT Length는 해당 필드 데이터의 길잇값을 의미한다. <br>
 * 먼저 Data length 값을 저장한 후 TXT Length 값만큼 데이터를 출력하는 반복문을 수행하는데 이때 TXT Length 값에 +1 씩 더하여 축적된 값과 Data length 값을 비교하여 같을 때까지 수행하면 모든 TXT 데이터를 얻어올 수 있게 된다.
 ```
