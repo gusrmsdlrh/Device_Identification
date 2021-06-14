@@ -3,8 +3,8 @@
 # 1. 개요
 다수의 프토토콜 중 [UDP-Based Active Scan for IoT Security (UAIS)](http://itiis.org/digital-library/24228) 논문에서 활용된 mDNS 프로토콜의 예제이다<br>
 
-UDP/5353 mDNS(Multicast DNS)는 zeroconf로 DHCP 환경이 없는 네트워크에서 프린터 등의 호스트(/etc/hosts)를 찾아 자동으로 연결해주는 데 사용된다.<br>
 
+UDP/5353 mDNS(Multicast DNS)는 zeroconf로 DHCP 환경이 없는 네트워크에서 프린터 등의 호스트(/etc/hosts)를 찾아 자동으로 연결해주는 데 사용된다.<br>
 기본적으로 DNS에 기반하여 동작이 이루어지지만 mDNS 위에 DNS-SD(DNS Service Discovery)를 빌드하여 사용할 경우 PTR Type으로 호스트 네임, 서비스 목록을 Query 하면 응답된 패킷의 Answers 필드에서 PTR/TXT/SRV/A 각 Type의 데이터들을 이용하여 정보를 얻어올 수 있으며 이러한 정보로 대상의 타입을 유추할 수 있게 된다.
 
 * PTR : 서비스 도메인 이름
