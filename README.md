@@ -1,6 +1,7 @@
 # <center> mDNS UDP 프로토콜 Queries - Answers 데이터 파싱</center>
 
 # 1. 개요
+UDP-Based Active Scan for IoT Security (UAIS) 논문에서 활용된 mDNS 프로토콜의 예제
 [mDNS RFC 6763](https://datatracker.ietf.org/doc/html/rfc6763), [DNS-SD RFC 6762](https://datatracker.ietf.org/doc/html/rfc6762) <br>
 
 UDP/5353 mDNS(Multicast DNS)는 zeroconf로 DHCP 환경이 없는 네트워크에서 프린터 등의 호스트(/etc/hosts)를 찾아 자동으로 연결해주는 데 사용된다.<br>
