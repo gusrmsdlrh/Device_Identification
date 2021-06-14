@@ -161,7 +161,7 @@ elif srv_ and b"\x00\x21\x00\x01\x00\x00\x00\x0a" in recv_data: # SRV (Server Se
 ![image](https://user-images.githubusercontent.com/40857478/121630911-06fdf800-cab9-11eb-8be8-e507d5449aa3.png)
 
 # 4. 결과
-이처럼 mDNS 프로토콜을 사용 중인 대상으로 수행할 경우 기기의 정보들을 얻어올 수 있다.
+mDNS 프로토콜을 사용 중인 대상으로 수행할 경우 기기의 정보들을 얻어올 수 있다.
 
 **# python3 mdns_scan.py 192.168.0.45**
 <br><br>
