@@ -1,7 +1,7 @@
 # <center> mDNS UDP 프로토콜 Queries - Answers 데이터 파싱</center>
 
 # 1. 개요
-다수의 프토토콜을 분석하였으며 그 중 [UDP-Based Active Scan for IoT Security (UAIS)](http://itiis.org/digital-library/24228) 논문에서 활용된 mDNS 프로토콜의 예제이다<br>
+다수의 프토토콜 중 [UDP-Based Active Scan for IoT Security (UAIS)](http://itiis.org/digital-library/24228) 논문에서 활용된 mDNS 프로토콜의 예제이다<br>
 
 UDP/5353 mDNS(Multicast DNS)는 zeroconf로 DHCP 환경이 없는 네트워크에서 프린터 등의 호스트(/etc/hosts)를 찾아 자동으로 연결해주는 데 사용된다.<br>
 
@@ -24,7 +24,7 @@ UDP/5353 mDNS(Multicast DNS)는 zeroconf로 DHCP 환경이 없는 네트워크�
 * import sys
 * import binascii
 
-# 3. 과정
+# 3. 처리 과정 요약
 * 실행할 때 인자로 받은 IP 주소를 "." 기준으로 나누어 저장하며 저장된 길이 값과 나누어진 IP 주소를 16진수 데이터로 만들고 주소 순서를 Reverse로 Standard Query를 요청한다. ex) 192.168.0.45 -> 45.0.168.192 -> '\x02\x34\x35 \x01\x30 \x03\x31\x36\x38 \x03\x31\x39\x32'
 ```
 def host_query_pkt():
