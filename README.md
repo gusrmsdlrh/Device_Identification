@@ -13,7 +13,7 @@ UDP/5353 mDNS(Multicast DNS)는 zeroconf로 DHCP 환경이 없는 네트워크�
 * ~~AAAA : IPv6~~
 * ~~A : IPv4~~
 
-서비스 요청 목록은 [DNS-SD Service Type List](http://dns-sd.org/ServiceTypes.html)에서 확인할 수 있으며 운용중인 서비스를 요청해야 하지만 Bruteforce 식으로 하나씩 요청하기에는 리소스적으로 무리가 있기에 대상의 서비스 목록을 요청할 수 있는 **service.dns-sd.udp.local** 서비스 타입을 이용하면 된다.
+서비스 요청 목록은 [DNS-SD Service Type List](http://dns-sd.org/ServiceTypes.html)에서 확인할 수 있으며 운용중인 서비스를 요청해야 하지만 Bruteforce 식으로 하나씩 하기에는 리소스적으로 무리가 있기에 대상의 서비스 목록을 요청할 수 있는 **service.dns-sd.udp.local** 서비스 타입을 이용하면 된다.
 <br>
 # 2. Python3
 **Usage) Python3 mdns_scan.py target**
