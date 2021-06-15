@@ -13,7 +13,6 @@ def service_query():
         sock.send(base + service_list_req )
         try:
                 data=sock.recv(1024)
-
                 service_raw=data.split(b'\xc0\x0c\x00\x0c') # Answers Field service name Split
                 for i in range(1,len(service_raw)):
                         if b'\x5f\x74\x63\x70' in service_raw[i][8:-2] or b'\x5f\x75\x64\x70' in service_raw[i][8:-2]:
