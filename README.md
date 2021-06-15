@@ -84,7 +84,6 @@ def service_query():
 * 그리고 ServiceName을 재요청하기 위해서는 도메인 데이터가 필요하기에 얻어온 Service Name에 도메인 데이터가 존재하지 않으면 추가하여 전달한다.
 ```
 data=sock.recv(1024)
-
 service_raw=data.split(b'\xc0\x0c\x00\x0c') # Answers Field service name Split
 	for i in range(1,len(service_raw)):
 		if b'\x5f\x74\x63\x70' in service_raw[i][8:-2] or b'\x5f\x75\x64\x70' in service_raw[i][8:-2]:
