@@ -52,7 +52,7 @@ def host_query():
                 print("[+] mDNS HostName Query")
                 host_data=sock.recv(1024).split(b'\x00\x01\x00\x00\x00\x0a')[1]
                 data_len=int(binascii.hexlify(host_data[0:2]),16)
-                print("\"HostName\" : " + host_data[3:data_len+1].decode())
+                print("\"HostName\" : " + host_data[3:data_len-4].decode())
                 service_query()
         except socket.timeout as timeerror:
                 print("HostName Query : "+ str(timeerror))
