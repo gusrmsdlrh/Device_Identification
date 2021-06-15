@@ -180,7 +180,7 @@ mDNS 프로토콜을 사용 중인 대상으로 수행할 경우 기기의 정�
 
 <br><br>
 ![image](https://user-images.githubusercontent.com/40857478/121978411-19cb4200-cdc3-11eb-92d8-30524526409e.png)
-![image](https://user-images.githubusercontent.com/40857478/121978176-9a3d7300-cdc2-11eb-9441-9370c3ecd5a7.png)
 ![image](https://user-images.githubusercontent.com/40857478/121978223-b2ad8d80-cdc2-11eb-885a-f99449f83647.png)
+![image](https://user-images.githubusercontent.com/40857478/121978176-9a3d7300-cdc2-11eb-9441-9370c3ecd5a7.png)
 ![image](https://user-images.githubusercontent.com/40857478/121978274-d53fa680-cdc2-11eb-9422-3aaf8d65fa21.png)
 <br><br>
