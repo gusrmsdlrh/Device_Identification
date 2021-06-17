@@ -183,3 +183,23 @@ mDNS 프로토콜을 사용 중인 대상으로 수행할 경우 기기의 정�
 ![image](https://user-images.githubusercontent.com/40857478/121978176-9a3d7300-cdc2-11eb-9441-9370c3ecd5a7.png)
 ![image](https://user-images.githubusercontent.com/40857478/121978274-d53fa680-cdc2-11eb-9422-3aaf8d65fa21.png)
 <br><br>
+
+# 5. ETC
+위 코드는 Unicast 통신 방식의 코드이며 기기간의 Multicast 방식을 위해서는 아래와 같이 사용하면 된다.
+```
+MCAST_GRP = '224.0.0.251'
+MCAST_PORT = 5353
+ 
+sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+sock.bind(('', MCAST_PORT))
+sock.sendto(mdns_pkt, (MCAST_GRP, MCAST_PORT))
+
+mreq = struct.pack("4sl", socket.inet_aton(MCAST_GRP), socket.INADDR_ANY)
+sock.setsockopt(socket.IPPROTO_IP, socket.IP_ADD_MEMBERSHIP, mreq)
+
+while 1:
+	data, address = sock.recvfrom(1024)
+	if target in address:
+		[...]
+```
