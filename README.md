@@ -15,7 +15,7 @@ UDP/5353 mDNS(Multicast DNS)는 zeroconf로 DHCP 환경이 없는 네트워크�
 # 2. Python3
 **Usage) Python3 mdns_scan.py target**
 
-코드에서 사용되는 모듈은 3가지이며 최대한 내장 모듈을 이용하여 프로그래밍 하였다.
+코드에서 사용되는 모듈은 3가지이며 최대한 내장 모듈을 이용하였다.
 
 * import socket
 * import sys
@@ -172,7 +172,6 @@ elif srv_ and b"\x00\x21\x00\x01\x00\x00\x00\x0a" in recv_data: # SRV (Server Se
 ![image](https://user-images.githubusercontent.com/40857478/121630911-06fdf800-cab9-11eb-8be8-e507d5449aa3.png)
 
 # 4. 결과
-mDNS 프로토콜을 사용 중인 대상으로 수행할 경우 기기의 정보들을 얻어올 수 있다.
 
 <br><br>
 ![image](https://user-images.githubusercontent.com/40857478/121978411-19cb4200-cdc3-11eb-92d8-30524526409e.png)
