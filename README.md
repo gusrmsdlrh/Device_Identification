@@ -1,9 +1,6 @@
-# <center> mDNS 프로토콜 Queries - Answers 데이터 파싱</center>
+# <center> mDNS 프로토콜 Queries - Answers 예시 </center>
 
 # 1. 개요
-[UDP-Based Active Scan for IoT Security (UAIS)](http://itiis.org/digital-library/24228) 논문에서 활용된 mDNS 프로토콜의 Python 활용 예제이다.<br>
-
-
 UDP/5353 mDNS(Multicast DNS)는 zeroconf로 DHCP 환경이 없는 네트워크에서 프린터와 같은 호스트를 식별하고 자동으로 연결해주는 데 사용된다.<br>
 기본적으로 DNS에 기반하여 동작이 이루어지지만 mDNS 위에 DNS-SD(DNS Service Discovery)를 빌드하여 사용할 경우 Discovery 프로토콜로 활용할 수 있으며 PTR Type으로 호스트 네임, 특정 서비스를 Query 하면 응답된 패킷의 Answers 필드에서 PTR/TXT/SRV/A 각 Type의 데이터들을 이용하여 정보를 얻어올 수 있다.
 
